@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>🎄 Christmas Countdown 🎄</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      color: white;
+      overflow: hidden;
+
+      background:
+        radial-gradient(circle at top, #174b68 0%, #082c42 40%, #041923 100%);
+    }
+
+    /* Snow container */
+    #snow {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .snowflake {
+      position: absolute;
+      top: -30px;
+      color: white;
+      opacity: 0.85;
+      animation-name: snowfall;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+
+    @keyframes snowfall {
+      from {
+        transform: translateY(-30px) rotate(0deg);
+      }
+
+      to {
+        transform: translateY(110vh) rotate(360deg);
+      }
+    }
+
+    /* Main page */
+    .page {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 25px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Countdown card */
+    .card {
+      width: min(950px, 100%);
+      text-align: center;
+
+      padding: 45px 25px;
+
+      border-radius: 30px;
+
+      background: rgba(0, 0, 0, 0.32);
+
+      border: 1px solid rgba(255, 255, 255, 0.2);
+
+      box-shadow:
+        0 25px 80px rgba(0, 0, 0, 0.45);
+
+      backdrop-filter: blur(12px);
+
+      animation: appear 1s ease-out;
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(25px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Christmas tree */
+    .tree {
+      font-size: 75px;
+      margin-bottom: 5px;
+
+      animation: treeBounce 3s ease-in-out infinite;
+    }
+
+    @keyframes treeBounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+
+    /* Title */
+    h1 {
+      margin: 0;
+
+      font-size: clamp(2.5rem, 8vw, 5.5rem);
+
+      font-weight: 900;
+
+      letter-spacing: -3px;
+
+      text-shadow:
+        0 5px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .subtitle {
+      margin: 15px 0 35px;
+
+      font-size: 1.1rem;
+
+      opacity: 0.85;
+    }
+
+    /* Countdown */
+    .countdown {
+      display: grid;
+
+      grid-template-columns:
+        repeat(4, 1fr);
+
+      gap: 15px;
+
+      max-width: 800px;
+
+      margin: auto;
+    }
+
+    .box {
+      padding: 25px 10px;
+
+      border-radius: 22px;
+
+      background:
+        rgba(255, 255, 255, 0.11);
+
+      border:
+        1px solid rgba(255, 255, 255, 0.16);
+
+      box-shadow:
+        inset 0 0 25px rgba(255, 255, 255, 0.04);
+
+      transition: transform 0.2s ease;
+    }
+
+    .box:hover {
+      transform: translateY(-5px);
+    }
+
+    .number {
+      font-size: clamp(2.2rem, 7vw, 4.5rem);
+
+      font-weight: 900;
+
+      font-variant-numeric: tabular-nums;
+    }
+
+    .label {
+      margin-top: 5px;
+
+      font-size: 0.75rem;
+
+      letter-spacing: 3px;
+
+      text-transform: uppercase;
+
+      opacity: 0.65;
+    }
+
+    /* Message */
+    #message {
+      min-height: 30px;
+
+      margin-top: 30px;
+
+      font-size: 1.25rem;
+
+      font-weight: bold;
+    }
+
+    /* Date information */
+    .date {
+      margin-top: 10px;
+
+      font-size: 0.85rem;
+
+      opacity: 0.55;
+    }
+
+    /* Decorations */
+    .decorations {
+      margin-top: 25px;
+
+      font-size: 1.8rem;
+
+      letter-spacing: 10px;
+    }
+
+    /* Mobile */
+    @media (max-width: 650px) {
+
+      body {
+        overflow: auto;
+      }
+
+      .page {
+        padding: 15px;
+      }
+
+      .card {
+        padding: 35px 15px;
+      }
+
+      .tree {
+        font-size: 60px;
+      }
+
+      .countdown {
+        grid-template-columns:
+          repeat(2, 1fr);
+      }
+
+      .box {
+        padding: 20px 8px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Falling snow -->
+  <div id="snow"></div>
+
+  <div class="page">
+
+    <div class="card">
+
+      <div class="tree">
+        🎄
+      </div>
+
+      <h1>
+        Christmas Countdown
+      </h1>
+
+      <div class="subtitle">
+        ✨ Counting down to Christmas! ✨
+      </div>
+
+      <!-- Countdown numbers -->
+      <div class="countdown">
+
+        <div class="box">
+          <div class="number" id="days">
+            000
+          </div>
+
+          <div class="label">
+            Days
+          </div>
+        </div>
+
+        <div class="box">
+          <div class="number" id="hours">
+            00
+          </div>
+
+          <div class="label">
+            Hours
+          </div>
+        </div>
+
+        <div class="box">
+          <div class="number" id="minutes">
+            00
+          </div>
+
+          <div class="label">
+            Minutes
+          </div>
+        </div>
+
+        <div class="box">
+          <div class="number" id="seconds">
+            00
+          </div>
+
+          <div class="label">
+            Seconds
+          </div>
+        </div>
+
+      </div>
+
+      <div id="message">
+        🎁 Keep counting down!
+      </div>
+
+      <div class="date">
+        Christmas Day • December 25, 2026
+      </div>
+
+      <div class="decorations">
+        ❄️ ✨ 🎁 ✨ ❄️
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    /*
+      CHRISTMAS TARGET
+
+      December 25, 2026
+      12:00 AM
+
+      The visitor's local computer clock
+      is used automatically.
+    */
+
+    const christmas =
+      new Date(2026, 11, 25, 0, 0, 0);
+
+
+    function updateCountdown() {
+
+      const now = new Date();
+
+      const difference =
+        christmas - now;
+
+
+      /*
+        Christmas has arrived!
+      */
+
+      if (difference <= 0) {
+
+        document.getElementById("days")
+          .textContent = "000";
+
+        document.getElementById("hours")
+          .textContent = "00";
+
+        document.getElementById("minutes")
+          .textContent = "00";
+
+        document.getElementById("seconds")
+          .textContent = "00";
+
+        document.getElementById("message")
+          .textContent =
+          "🎅 MERRY CHRISTMAS! 🎄🎁";
+
+        return;
+      }
+
+
+      /*
+        Convert milliseconds
+        into time units.
+      */
+
+      const totalSeconds =
+        Math.floor(difference / 1000);
+
+
+      const days =
+        Math.floor(
+          totalSeconds / 86400
+        );
+
+
+      const hours =
+        Math.floor(
+          (totalSeconds % 86400) / 3600
+        );
+
+
+      const minutes =
+        Math.floor(
+          (totalSeconds % 3600) / 60
+        );
+
+
+      const seconds =
+        totalSeconds % 60;
+
+
+      /*
+        Display numbers
+      */
+
+      document.getElementById("days")
+        .textContent =
+        String(days).padStart(3, "0");
+
+
+      document.getElementById("hours")
+        .textContent =
+        String(hours).padStart(2, "0");
+
+
+      document.getElementById("minutes")
+        .textContent =
+        String(minutes).padStart(2, "0");
+
+
+      document.getElementById("seconds")
+        .textContent =
+        String(seconds).padStart(2, "0");
+
+
+      /*
+        Change the message
+        as Christmas gets closer.
+      */
+
+      const message =
+        document.getElementById("message");
+
+
+      if (days === 0) {
+
+        message.textContent =
+          "🎅 Christmas is almost here!";
+
+      }
+
+      else if (days === 1) {
+
+        message.textContent =
+          "🎄 ONLY 1 DAY TO GO!";
+
+      }
+
+      else if (days <= 10) {
+
+        message.textContent =
+          "🎁 Christmas is getting VERY close!";
+
+      }
+
+      else if (days <= 30) {
+
+        message.textContent =
+          "🎄 The Christmas countdown is on!";
+
+      }
+
+      else {
+
+        message.textContent =
+          "✨ Keep counting down!";
+
+      }
+
+    }
+
+
+    /*
+      Update immediately,
+      then keep it synchronized.
+    */
+
+    updateCountdown();
+
+    setInterval(
+      updateCountdown,
+      250
+    );
+
+
+    /*
+      CREATE FALLING SNOW
+    */
+
+    const snow =
+      document.getElementById("snow");
+
+
+    for (let i = 0; i < 60; i++) {
+
+      const flake =
+        document.createElement("div");
+
+
+      flake.className =
+        "snowflake";
+
+
+      flake.textContent =
+        Math.random() > 0.25
+          ? "❄"
+          : "•";
+
+
+      flake.style.left =
+        Math.random() * 100 + "%";
+
+
+      flake.style.fontSize =
+        (8 + Math.random() * 18) + "px";
+
+
+      flake.style.animationDuration =
+        (6 + Math.random() * 12) + "s";
+
+
+      flake.style.animationDelay =
+        (-Math.random() * 15) + "s";
+
+
+      snow.appendChild(flake);
+
+    }
+
+  </script>
+
+</body>
+</html>
