@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>122 Days Until Christmas 🎄</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+    font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+    color: #fff;
+    background: linear-gradient(#071b3a, #123d5a 65%, #0b2431);
+    text-align: center;
+  }
+  .snow { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+  .flake {
+    position: absolute; top: -30px; color: white; opacity: .9;
+    animation: fall linear infinite;
+  }
+  @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
+  header { padding: 32px 16px 10px; }
+  h1 { font-size: clamp(2rem, 6vw, 4.2rem); margin: 0 0 8px; }
+  .subtitle { font-size: 1.1rem; opacity: .9; }
+
+  .countdown {
+    display: flex; justify-content: center; flex-wrap: wrap; gap: 12px;
+    margin: 25px auto; max-width: 850px; padding: 0 15px;
+  }
+  .box {
+    min-width: 120px; padding: 18px 12px; border-radius: 18px;
+    background: rgba(255,255,255,.13);
+    border: 1px solid rgba(255,255,255,.22);
+    box-shadow: 0 10px 30px rgba(0,0,0,.18);
+    backdrop-filter: blur(8px);
+  }
+  .num { font-size: 2.3rem; font-weight: 800; }
+  .label { font-size: .85rem; text-transform: uppercase; letter-spacing: 2px; opacity: .8; }
+
+  .tree {
+    width: 210px; height: 230px; margin: 15px auto 5px; position: relative;
+  }
+  .star { font-size: 45px; position: absolute; top: -20px; left: 78px; filter: drop-shadow(0 0 12px gold); }
+  .tri { position: absolute; left: 15px; width: 0; height: 0; border-left: 90px solid transparent; border-right: 90px solid transparent; border-bottom: 110px solid #116b3b; }
+  .t1 { top: 20px; } .t2 { top: 65px; border-left-width: 100px; border-right-width: 100px; border-bottom-width: 120px; left: 5px; }
+  .t3 { top: 115px; border-left-width: 108px; border-right-width: 108px; border-bottom-width: 125px; left: -3px; }
+  .trunk { position: absolute; width: 38px; height: 55px; background:#704126; bottom:-3px; left:86px; }
+  .orn { position:absolute; width:13px; height:13px; border-radius:50%; background:#e33; box-shadow:0 0 10px #fff; }
+  .o1{left:55px;top:88px}.o2{left:130px;top:75px}.o3{left:92px;top:135px}.o4{left:150px;top:155px}.o5{left:42px;top:160px}
+  .lights { position:absolute; inset:35px 25px 35px; border:2px dotted #ffd84d; border-radius:50%; transform:rotate(-12deg); }
+
+  .panel {
+    width:min(900px,92%); margin:25px auto; padding:24px; border-radius:22px;
+    background:rgba(0,0,0,.22); border:1px solid rgba(255,255,255,.15);
+  }
+  .progress-wrap { background:rgba(255,255,255,.15); border-radius:999px; height:22px; overflow:hidden; }
+  .progress { height:100%; width:0%; background:linear-gradient(90deg,#e63946,#ffd166,#2ec4b6); transition:width .5s; }
+  button {
+    border:0; border-radius:999px; padding:13px 20px; margin:8px;
+    font-size:1rem; font-weight:700; cursor:pointer; color:#09233d;
+    background:#fff; transition:.2s;
+  }
+  button:hover { transform:translateY(-2px) scale(1.03); }
+  .surprise { min-height:55px; margin-top:12px; font-size:1.05rem; }
+  footer { padding:25px; opacity:.7; }
+</style>
+</head>
+<body>
+<div class="snow" id="snow"></div>
+
+<header>
+  <h1>🎄 Christmas Countdown 🎄</h1>
+  <div class="subtitle">The holiday magic starts now!</div>
+</header>
+
+<div class="countdown">
+  <div class="box"><div class="num" id="days">122</div><div class="label">Days</div></div>
+  <div class="box"><div class="num" id="hours">00</div><div class="label">Hours</div></div>
+  <div class="box"><div class="num" id="minutes">00</div><div class="label">Minutes</div></div>
+  <div class="box"><div class="num" id="seconds">00</div><div class="label">Seconds</div></div>
+</div>
+
+<div class="tree">
+  <div class="star">⭐</div>
+  <div class="tri t1"></div><div class="tri t2"></div><div class="tri t3"></div>
+  <div class="lights"></div><div class="trunk"></div>
+  <div class="orn o1"></div><div class="orn o2"></div><div class="orn o3"></div>
+  <div class="orn o4"></div><div class="orn o5"></div>
+</div>
+
+<div class="panel">
+  <h2>🎁 Christmas Journey</h2>
+  <p id="journey">122 days of anticipation!</p>
+  <div class="progress-wrap"><div class="progress" id="progress"></div></div>
+
+  <h2>✨ Daily Surprise</h2>
+  <button onclick="surprise()">🎅 Reveal Today's Surprise</button>
+  <div class="surprise" id="surprise">Click the button!</div>
+
+  <h2>🎄 Christmas Mode</h2>
+  <button onclick="toggleSnow()">❄️ Toggle Snow</button>
+  <button onclick="lights()">💡 Christmas Lights</button>
+</div>
+
+<footer>Made for the countdown to Christmas ❤️</footer>
+
+<script>
+const start = new Date();
+start.setDate(start.getDate() - 0);
+const christmas = new Date(new Date().getFullYear(), 11, 25, 0, 0, 0);
+const surprises = [
+ "🎁 Do one nice thing for someone today.",
+ "🍪 Have a Christmas cookie!",
+ "🎬 Watch a favorite holiday movie.",
+ "🎶 Listen to your favorite Christmas song.",
+ "☕ Make a cozy holiday drink.",
+ "🎄 Add one decoration to your room.",
+ "📸 Take a festive photo.",
+ "🦌 Find a funny reindeer fact.",
+ "✉️ Send someone a nice holiday message.",
+ "⭐ Make a Christmas wish."
+];
+
+function update() {
+  const now = new Date();
+  let diff = christmas - now;
+  if (diff < 0) diff = 0;
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor(diff / 3600000) % 24;
+  const m = Math.floor(diff / 60000) % 60;
+  const s = Math.floor(diff / 1000) % 60;
+  document.getElementById("days").textContent = d;
+  document.getElementById("hours").textContent = String(h).padStart(2,"0");
+  document.getElementById("minutes").textContent = String(m).padStart(2,"0");
+  document.getElementById("seconds").textContent = String(s).padStart(2,"0");
+
+  const initial = 122;
+  const elapsed = Math.max(0, initial - d);
+  const pct = Math.min(100, elapsed / initial * 100);
+  document.getElementById("progress").style.width = pct + "%";
+  document.getElementById("journey").textContent =
+    d > 0 ? `${d} days left — ${Math.round(pct)}% of the journey complete!`
+           : "🎅 MERRY CHRISTMAS! 🎄";
+}
+setInterval(update, 1000); update();
+
+function surprise() {
+  const day = new Date().getDate();
+  document.getElementById("surprise").textContent =
+    surprises[day % surprises.length];
+}
+
+let snowOn = true;
+function makeSnow() {
+  const s = document.getElementById("snow");
+  s.innerHTML = "";
+  if (!snowOn) return;
+  for (let i=0;i<70;i++) {
+    const f=document.createElement("div");
+    f.className="flake"; f.textContent="❄";
+    f.style.left=Math.random()*100+"%";
+    f.style.fontSize=(8+Math.random()*18)+"px";
+    f.style.animationDuration=(5+Math.random()*9)+"s";
+    f.style.animationDelay=(-Math.random()*12)+"s";
+    s.appendChild(f);
+  }
+}
+function toggleSnow(){ snowOn=!snowOn; makeSnow(); }
+function lights(){
+  document.querySelectorAll(".orn").forEach((o,i)=>{
+    o.style.background = ["#e63946","#ffd166","#2ec4b6","#fff","#ff8fab"][i];
+  });
+  document.body.animate([{filter:"brightness(1)"},{filter:"brightness(1.25)"},{filter:"brightness(1)"}],
+                        {duration:700});
+}
+makeSnow();
+</script>
+</body>
+</html>
